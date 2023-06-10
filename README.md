@@ -1,18 +1,91 @@
-项目介绍：
-功能：两种角色管理员和学生
-普通学生登录：学生基本信息进行查询
-​      成绩基本信息进行查询
-​      课程基本信息进行查询
-管理员可以管理学生、成绩、课程等基本信息:
-​    学生模块的添加、修改、删除、查询 
- ​    成绩模块的添加、修改、删除、查询
-​    课程模块的添加、修改、删除、查询
-Main函数在com.system.view.login里面
+# StudentCore
 
-登录界面：
+> 基于 Java Swing + JDBC + MySQL 的学生信息管理桌面系统，支持管理员与学生双角色登录，覆盖学生/课程/成绩等核心教学数据管理。
 
-我们先以管理员身份登录进去，管理员用户名是123456，密码123456
+## 1. 项目定位
 
-按普通学生的身份登录系统，用户名20210601(20210602、20210603、20210604)，密码123：
+`StudentCore` 是一个典型的桌面端教务管理练手项目，强调“本地单机可运行、界面直观、CRUD 流程完整”。
 
-完成。
+系统采用 Swing 图形界面，不依赖浏览器。
+
+## 2. 已实现功能
+
+- 双角色登录：管理员、学生
+- 学生信息管理：新增、查询、修改、删除
+- 课程信息管理：新增、查询、修改、删除
+- 成绩信息管理：新增、查询、修改、删除
+- 基础权限区分：管理员可管理，学生以查询为主
+
+## 3. 技术栈
+
+- Java 8
+- Java Swing
+- JDBC
+- MySQL 8.x
+- Eclipse 工程结构（含 `mysql-connector-java-8.0.11.jar`）
+
+## 4. 项目结构
+
+```text
+StudentCore
+├── 完整源码/demo6/
+│   ├── src/com/system/
+│   │   ├── view/                   # 登录与各业务窗口
+│   │   ├── dao/                    # 数据访问层
+│   │   ├── entity/                 # 实体类
+│   │   └── utils/DB.java           # 数据库连接配置
+│   └── lib/mysql-connector-java-8.0.11.jar
+├── 数据库文件/student_a.sql
+└── README.md
+```
+
+## 5. 本地运行
+
+### 5.1 环境准备
+
+- JDK 8
+- MySQL 8.x
+- Eclipse（或任意支持 Swing 的 Java IDE）
+
+### 5.2 初始化数据库
+
+1. 创建数据库：`student_a`
+2. 导入 [student_a.sql](/Users/liuzhuoran/Documents/Playground/readme-batch/StudentCore/数据库文件/student_a.sql)
+3. 修改 [DB.java](/Users/liuzhuoran/Documents/Playground/readme-batch/StudentCore/完整源码/demo6/src/com/system/utils/DB.java) 中的数据库账号密码
+
+### 5.3 启动程序
+
+运行主入口：
+
+- [Login.java](/Users/liuzhuoran/Documents/Playground/readme-batch/StudentCore/完整源码/demo6/src/com/system/view/Login.java)
+- 方法：`public static void main(String[] args)`
+
+## 6. 默认账号（来自 SQL 与源码说明）
+
+- 管理员：`123456 / 123456`
+- 学生示例：`20210601 / 123`（`20210602/03/04` 同规则）
+
+## 7. 常见问题
+
+- 登录失败：先确认 `DB.java` 中数据库连接是否修改为本机配置
+- 驱动报错：确认项目已正确加载 `lib/mysql-connector-java-8.0.11.jar`
+- 中文乱码：检查 IDE 编码为 UTF-8，数据库字符集为 `utf8`/`utf8mb4`
+
+## 8. 改进建议
+
+- 将 JDBC 明文配置改造为外部配置文件
+- 增加统一异常提示与日志
+- 引入 Maven/Gradle，替换手工管理 jar 包方式
+
+## 12.1 贡献建议
+
+欢迎通过 Issue / PR 提交：
+
+- 代码重构（DAO 层、窗口复用）
+- 界面样式优化与用户体验改进
+- 数据导入导出功能扩展
+- 文档与运行脚本补充
+
+## 12.2 许可说明
+
+本仓库采用 MIT License，详见 [LICENSE](/Users/liuzhuoran/Documents/Playground/readme-batch/StudentCore/LICENSE)。
