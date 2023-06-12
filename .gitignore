@@ -1,0 +1,22 @@
+# --- Common Codex ignores ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Java / Maven
+target/
+build/
+
+# Node
+node_modules/
