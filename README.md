@@ -54,14 +54,14 @@ StudentCore
 ### 5.2 初始化数据库
 
 1. 创建数据库：`student_a`
-2. 导入 [student_a.sql](/Users/liuzhuoran/Documents/Playground/readme-batch/StudentCore/数据库文件/student_a.sql)
-3. 修改 [DB.java](/Users/liuzhuoran/Documents/Playground/readme-batch/StudentCore/完整源码/demo6/src/com/system/utils/DB.java) 中的数据库账号密码
+2. 导入 [student_a.sql](数据库文件/student_a.sql)
+3. 修改 [DB.java](完整源码/demo6/src/com/system/utils/DB.java) 中的数据库账号密码
 
 ### 5.3 启动程序
 
 运行主入口：
 
-- [Login.java](/Users/liuzhuoran/Documents/Playground/readme-batch/StudentCore/完整源码/demo6/src/com/system/view/Login.java)
+- [Login.java](完整源码/demo6/src/com/system/view/Login.java)
 - 方法：`public static void main(String[] args)`
 
 ## 6. 默认账号（来自 SQL 与源码说明）
@@ -92,4 +92,4 @@ StudentCore
 
 ## 12.2 许可说明
 
-本仓库采用 MIT License，详见 [LICENSE](/Users/liuzhuoran/Documents/Playground/readme-batch/StudentCore/LICENSE)。
+本仓库采用 MIT License，详见 [LICENSE](LICENSE)。
