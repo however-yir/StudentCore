@@ -1,4 +1,4 @@
-# StudentCore
+# StudentCore - 学生信息管理桌面系统 | Student Management Desktop System
 
 🔥 A Java Swing student management system based on JDBC and MySQL.  
 🚀 Built for dual-role desktop administration across students, courses, and grades.  
