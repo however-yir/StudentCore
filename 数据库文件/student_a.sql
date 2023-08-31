@@ -22,14 +22,14 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin` (
   `Aid` int NOT NULL,
   `Aname` varchar(30) NOT NULL,
-  `Apwd` varchar(10) NOT NULL,
+  `Apwd` varchar(100) NOT NULL,
   PRIMARY KEY (`Aid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES ('123456', '管理员', '123456');
+INSERT INTO `admin` VALUES ('123456', '管理员', '$2a$12$asK7E6tYv2wdR/j2.0rVfuZaliYKQG3Egvpbhvh4z8LGG0nwOpFy6');
 
 -- ----------------------------
 -- Table structure for course
@@ -98,7 +98,7 @@ CREATE TABLE `student` (
   `Sclass` varchar(10) NOT NULL,
   `Smajor` varchar(20) NOT NULL,
   `Sdept` varchar(20) NOT NULL,
-  `Spwd` varchar(10) NOT NULL DEFAULT '123',
+  `Spwd` varchar(100) NOT NULL,
   PRIMARY KEY (`Sno`),
   KEY `Sname` (`Sname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -106,7 +106,7 @@ CREATE TABLE `student` (
 -- ----------------------------
 -- Records of student
 -- ----------------------------
-INSERT INTO `student` VALUES ('20210601', '李伟', '男', '20', '1999-01-01 00:00:00', '2021061', '软件工程', '计算机学院', '123');
-INSERT INTO `student` VALUES ('20210602', '王伟', '女', '20', '2021-06-26 21:29:26', '2021061', '软件工程', '计算机学院', '123');
-INSERT INTO `student` VALUES ('20210603', '刘伟', '男', '20', '2021-06-26 21:29:30', '2021062', '软件工程', '计算机学院', '123');
-INSERT INTO `student` VALUES ('20210604', '赵伟', '男', '20', '2021-06-26 21:29:32', '2021062', '软件工程', '计算机学院', '123');
+INSERT INTO `student` VALUES ('20210601', '李伟', '男', '20', '1999-01-01 00:00:00', '2021061', '软件工程', '计算机学院', '$2a$12$u8jS6WULnNSTON8gy9k/peDpZornxbSiHDDJIWEYVq8W44buUEHG6');
+INSERT INTO `student` VALUES ('20210602', '王伟', '女', '20', '2021-06-26 21:29:26', '2021061', '软件工程', '计算机学院', '$2a$12$u8jS6WULnNSTON8gy9k/peDpZornxbSiHDDJIWEYVq8W44buUEHG6');
+INSERT INTO `student` VALUES ('20210603', '刘伟', '男', '20', '2021-06-26 21:29:30', '2021062', '软件工程', '计算机学院', '$2a$12$u8jS6WULnNSTON8gy9k/peDpZornxbSiHDDJIWEYVq8W44buUEHG6');
+INSERT INTO `student` VALUES ('20210604', '赵伟', '男', '20', '2021-06-26 21:29:32', '2021062', '软件工程', '计算机学院', '$2a$12$u8jS6WULnNSTON8gy9k/peDpZornxbSiHDDJIWEYVq8W44buUEHG6');

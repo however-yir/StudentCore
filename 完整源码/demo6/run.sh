@@ -14,7 +14,7 @@ mkdir -p out
 find src -name "*.java" > .sources.list
 
 echo "[INFO] Compiling StudentCore..."
-javac -encoding UTF-8 -cp "lib/mysql-connector-java-8.0.11.jar" -d out @.sources.list
+javac -encoding UTF-8 -cp "lib/*" -d out @.sources.list
 
 echo "[INFO] Launching login window..."
-java -cp "out:lib/mysql-connector-java-8.0.11.jar" com.system.view.Login
+java -cp "out:lib/*" com.system.view.Login

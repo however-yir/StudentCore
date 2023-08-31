@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,6 +26,7 @@ public class DB {
 	private String url;
 	// 数据库连接
 	public static Connection con;
+	private static volatile boolean passwordStoragePrepared = false;
 
 	// 构造方法
 	public DB() {
@@ -37,9 +39,10 @@ public class DB {
 			validateConfig();
 
 			// 加载驱动
-			Class.forName(driverName); // 这个驱动是mysql8版本的
+			Class.forName(driverName);
 			// 获取连接
 			con = DriverManager.getConnection(url, user, pass);
+			preparePasswordStorage(con);
 		} catch (Exception e) {
 			throw new IllegalStateException("Database initialization failed. Please check STUDENTCORE_DB_* env vars or config/db.properties", e);
 		}
@@ -73,7 +76,7 @@ public class DB {
 		}
 	}
 
-	private String firstNonBlank(String... values) {
+	private static String firstNonBlank(String... values) {
 		if (values == null) {
 			return null;
 		}
@@ -85,16 +88,66 @@ public class DB {
 		return null;
 	}
 
-	private boolean isBlank(String value) {
+	private static boolean isBlank(String value) {
 		return value == null || value.trim().isEmpty();
 	}
 
 	// 获取连接
 	public static Connection getConnection() {
-		if (con == null) {
+		try {
+			if (con == null || con.isClosed()) {
+				new DB();
+			}
+		} catch (SQLException e) {
 			new DB();
 		}
 		return con;
+	}
+
+	private static void preparePasswordStorage(Connection connection) throws SQLException {
+		if (passwordStoragePrepared) {
+			return;
+		}
+		synchronized (DB.class) {
+			if (passwordStoragePrepared) {
+				return;
+			}
+			ensurePasswordColumnLength(connection, "admin", "Apwd");
+			ensurePasswordColumnLength(connection, "student", "Spwd");
+			migrateLegacyPlaintextPasswords(connection, "admin", "Aid", "Apwd");
+			migrateLegacyPlaintextPasswords(connection, "student", "Sno", "Spwd");
+			passwordStoragePrepared = true;
+		}
+	}
+
+	private static void ensurePasswordColumnLength(Connection connection, String table, String column) throws SQLException {
+		String alterSql = "ALTER TABLE " + table + " MODIFY COLUMN " + column + " VARCHAR(100) NOT NULL";
+		try (Statement statement = connection.createStatement()) {
+			statement.execute(alterSql);
+		}
+	}
+
+	private static void migrateLegacyPlaintextPasswords(Connection connection,
+			String table,
+			String idColumn,
+			String passwordColumn) throws SQLException {
+		String querySql = "SELECT " + idColumn + ", " + passwordColumn + " FROM " + table;
+		String updateSql = "UPDATE " + table + " SET " + passwordColumn + " = ? WHERE " + idColumn + " = ?";
+		try (Statement queryStmt = connection.createStatement();
+				ResultSet rs = queryStmt.executeQuery(querySql);
+				PreparedStatement updateStmt = connection.prepareStatement(updateSql)) {
+			while (rs.next()) {
+				String raw = rs.getString(passwordColumn);
+				if (isBlank(raw) || PasswordUtil.looksLikeBCrypt(raw)) {
+					continue;
+				}
+				String idValue = rs.getString(idColumn);
+				updateStmt.setString(1, PasswordUtil.hash(raw));
+				updateStmt.setString(2, idValue);
+				updateStmt.addBatch();
+			}
+			updateStmt.executeBatch();
+		}
 	}
 
 	// 释放连接
