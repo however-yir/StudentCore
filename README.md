@@ -1,5 +1,9 @@
 # StudentCore
 
+🔥 A Java Swing student management system based on JDBC and MySQL.  
+🚀 Built for dual-role desktop administration across students, courses, and grades.  
+⭐ Supports local single-machine deployment, CRUD workflows, and classic teaching-management scenarios.
+
 > 基于 Java Swing + JDBC + MySQL 的学生信息管理桌面系统，支持管理员与学生双角色登录，覆盖学生/课程/成绩等核心教学数据管理。
 
 ## 1. 项目定位
