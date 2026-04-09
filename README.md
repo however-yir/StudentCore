@@ -55,11 +55,30 @@ StudentCore
 
 1. 创建数据库：`student_a`
 2. 导入 [student_a.sql](数据库文件/student_a.sql)
-3. 修改 [DB.java](完整源码/demo6/src/com/system/utils/DB.java) 中的数据库账号密码
+3. 复制配置模板并填写数据库连接：
+
+```bash
+cd 完整源码/demo6
+cp config/db.properties.example config/db.properties
+```
+
+也支持通过环境变量覆盖：
+
+- `STUDENTCORE_DB_URL`
+- `STUDENTCORE_DB_USERNAME`
+- `STUDENTCORE_DB_PASSWORD`
+- `STUDENTCORE_DB_DRIVER`
 
 ### 5.3 启动程序
 
-运行主入口：
+推荐直接使用脚本（自动编译并启动）：
+
+```bash
+cd 完整源码/demo6
+./run.sh
+```
+
+或者在 IDE 运行主入口：
 
 - [Login.java](完整源码/demo6/src/com/system/view/Login.java)
 - 方法：`public static void main(String[] args)`
@@ -77,7 +96,7 @@ StudentCore
 
 ## 8. 改进建议
 
-- 将 JDBC 明文配置改造为外部配置文件
+- 将 JDBC 配置继续迁移到更完整的构建体系（Maven/Gradle）
 - 增加统一异常提示与日志
 - 引入 Maven/Gradle，替换手工管理 jar 包方式
 

@@ -1,32 +1,92 @@
 package com.system.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 public class DB {
 
+	private static final String DEFAULT_CONFIG_PATH = "./config/db.properties";
+	private static final String DEFAULT_DRIVER = "com.mysql.cj.jdbc.Driver";
+
 	// 数据库地址
-	private String Driver_name = "jdbc:mysql://localhost:3306/student_a?serverTimezone=Asia/Shanghai&useSSL=false";
+	private String driverName = DEFAULT_DRIVER;
 	// 数据库用户名
-	private String USER = "root"; // 这里需要修改为自己的用户名和密码
+	private String user;
 	// 数据库密码
-	private String PASS = "123456";
+	private String pass;
+	// 数据库 URL
+	private String url;
 	// 数据库连接
 	public static Connection con;
 
 	// 构造方法
 	public DB() {
 		try {
+			Properties properties = loadProperties();
+			driverName = firstNonBlank(System.getenv("STUDENTCORE_DB_DRIVER"), properties.getProperty("db.driver"), DEFAULT_DRIVER);
+			url = firstNonBlank(System.getenv("STUDENTCORE_DB_URL"), properties.getProperty("db.url"));
+			user = firstNonBlank(System.getenv("STUDENTCORE_DB_USERNAME"), properties.getProperty("db.username"));
+			pass = firstNonBlank(System.getenv("STUDENTCORE_DB_PASSWORD"), properties.getProperty("db.password"));
+			validateConfig();
+
 			// 加载驱动
-			Class.forName("com.mysql.cj.jdbc.Driver"); // 这个驱动是mysql8版本的
+			Class.forName(driverName); // 这个驱动是mysql8版本的
 			// 获取连接
-			con = DriverManager.getConnection(Driver_name, USER, PASS);
+			con = DriverManager.getConnection(url, user, pass);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new IllegalStateException("Database initialization failed. Please check STUDENTCORE_DB_* env vars or config/db.properties", e);
 		}
+	}
+
+	private Properties loadProperties() {
+		Properties properties = new Properties();
+		try {
+			InputStream classpathInput = DB.class.getClassLoader().getResourceAsStream("db.properties");
+			if (classpathInput != null) {
+				properties.load(classpathInput);
+				classpathInput.close();
+			}
+
+			String configPath = firstNonBlank(System.getenv("STUDENTCORE_DB_CONFIG"), DEFAULT_CONFIG_PATH);
+			File file = new File(configPath);
+			if (file.isFile()) {
+				FileInputStream fileInput = new FileInputStream(file);
+				properties.load(fileInput);
+				fileInput.close();
+			}
+		} catch (Exception e) {
+			throw new IllegalStateException("Failed to load database config file", e);
+		}
+		return properties;
+	}
+
+	private void validateConfig() {
+		if (isBlank(url) || isBlank(user) || isBlank(pass)) {
+			throw new IllegalStateException("Missing db.url / db.username / db.password configuration");
+		}
+	}
+
+	private String firstNonBlank(String... values) {
+		if (values == null) {
+			return null;
+		}
+		for (String value : values) {
+			if (!isBlank(value)) {
+				return value.trim();
+			}
+		}
+		return null;
+	}
+
+	private boolean isBlank(String value) {
+		return value == null || value.trim().isEmpty();
 	}
 
 	// 获取连接

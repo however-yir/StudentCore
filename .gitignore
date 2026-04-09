@@ -20,3 +20,8 @@ build/
 
 # Node
 node_modules/
+
+# StudentCore local runtime
+完整源码/demo6/out/
+完整源码/demo6/.sources.list
+完整源码/demo6/config/db.properties
